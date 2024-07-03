@@ -7,14 +7,40 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <h1>game of life canvas</h1>
-    <div class="main">
-        <canvas id="canvas"></canvas>
-        <div class="control">
-            <button type="button" id="button">button</button>
-            <button id="toggleButton">Toggle</button>
+    <div class="container">
+        <h1>Cellular Automata canvas</h1>
+        <div class="main">
+            <canvas id="canvas"></canvas>
+            <div class="control">
+                <div class="button-group">
+                    <button class="button-30" type="button" id="button">Next</button>
+                    <button class="button-30" id="toggleButton">Auto</button>
+                    <button class="button-30" id="clear">Clear board</button>
+                </div>
+                <div class="other-option">
+                    <div class="inputfile-group">
+                        <h4>Image file </h4>
+                        <input accept="image/*" type="file" id="inputfile" />
+                        <img id="imgpreview" width="150" height="150" src="#" alt="your image" />
+                    </div>
+                    <div class="radio-group">
+                    <!-- <h2>Choose Automaton</h2> -->
+                        <label>
+                            <input type="radio" name="radioa" value="0" checked="">
+                            <span>Conway's life</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="radioa" value="1">
+                            <span>Brian's brain</span>
+                        </label>
+                    </div>
+                    <button class="button-30" id="selectCA">Select!</button>
+                </div>
+                
+            </div>
         </div>
     </div>
+    
     <script src="index.js"></script>
 </body>
 </html>
