@@ -138,11 +138,11 @@ async function toBase64(file) {
         reader.onerror = error => reject(error);
     });
 }
-async function loadimg(){
+async function loadimg(files){
     const newcanvas = document.createElement("canvas")
     const newctx = newcanvas.getContext("2d");
     const image = new Image();
-    const base64 = await toBase64(input.files[0]);
+    const base64 = await toBase64(files);
     image.src = base64;
     return new Promise((resolve,reject) => {
         image.onload = function() {
@@ -159,8 +159,8 @@ async function loadimg(){
 function pixelColorAVG(array){
     return (array[0] + array[1] + array[2])/3;
 }
-async function processImageToAutomaton(Automaton){
-    let imgData = await loadimg();
+async function processImageToAutomaton(imgfile, board, Automaton){
+    let imgData = await loadimg(imgfile);
     let pixelArray = new Uint8ClampedArray(imgData.data.length);
     pixelArray.set(imgData.data);
     for(let i = 0; i < imgData.height; i++){
@@ -182,12 +182,9 @@ async function processImageToAutomaton(Automaton){
             }            
         }
     }
-    render(board,currentAutomaton)
+    render(board,Automaton);
 }
 
-function handleImage(){
-    processImageToAutomaton(currentAutomaton)
-}
 window.onload = async () => {
     let currentBoard = CreateBoard();
     let nextBoard = CreateBoard();
@@ -239,12 +236,17 @@ window.onload = async () => {
     selectCAButton.addEventListener('click', e => {
         let chooseValue = document.querySelector('input[name="radioa"]:checked').value;
         let choosenAutomata = AUTOMATON_LIST[chooseValue];
-        if(choosenAutomata != currentAutomaton){
-            currentBoard = CreateBoard();
-            render(currentBoard,currentAutomaton);
-        }
+        let imgfile = input.files[0];
+        isRunning = false;
+        clearTimeout(timeoutId);
+        nextbutton.disabled = false;
         currentAutomaton = choosenAutomata;
-        processImageToAutomaton(currentAutomaton);
+        currentBoard = CreateBoard();
+        if(imgfile){
+            processImageToAutomaton(imgfile, currentBoard, currentAutomaton);
+        }
+        render(currentBoard,currentAutomaton);
+        
 
     })
     input.addEventListener("change", evt => {
