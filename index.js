@@ -159,6 +159,24 @@ async function loadimg(files){
 function pixelColorAVG(array){
     return (array[0] + array[1] + array[2])/3;
 }
+function validateImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const img = new Image();
+      img.src = window.URL.createObjectURL(file);
+      img.onload = function() {
+        if (img.width > 500 || img.height > 500) {
+          alert('Image dimensions should be less than 500x500 pixels.');
+          event.target.value = '';
+        } else {
+          console.log('Image is valid');
+          imgpreview = document.getElementById("imgpreview");
+          imgpreview.src = img.src
+        }
+        window.URL.revokeObjectURL(img.src); 
+      };
+    }
+  }
 async function processImageToAutomaton(imgfile, board, Automaton){
     let imgData = await loadimg(imgfile);
     let pixelArray = new Uint8ClampedArray(imgData.data.length);
@@ -237,6 +255,7 @@ window.onload = async () => {
         let chooseValue = document.querySelector('input[name="radioa"]:checked').value;
         let choosenAutomata = AUTOMATON_LIST[chooseValue];
         let imgfile = input.files[0];
+        //input.value = '';
         isRunning = false;
         clearTimeout(timeoutId);
         nextbutton.disabled = false;
@@ -250,11 +269,7 @@ window.onload = async () => {
 
     })
     input.addEventListener("change", evt => {
-        const [file] = input.files
-        if (file) {
-          imgpreview = document.getElementById("imgpreview");
-          imgpreview.src = URL.createObjectURL(file)
-        }
+        validateImage(evt)
     })
 
 }
